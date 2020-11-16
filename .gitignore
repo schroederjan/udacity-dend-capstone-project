@@ -12,3 +12,4 @@
 data/shapefiles
 __pycache__
 /testing
+*.Rproj
