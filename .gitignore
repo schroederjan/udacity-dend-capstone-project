@@ -1,0 +1,14 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.yml
+*.csv
+*.tar.gz
+*.wpr
+*.wpu
+*.cfg
+*.json
+data/shapefiles
+__pycache__
+/testing
