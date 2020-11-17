@@ -14,23 +14,23 @@ To follow along with the description in the Jupyter Notebook `Capstone Project W
 
 ## Dependencies
 
-The project interacts with a server running TimescaleDB there are two ways to bring it up and running, locally or in the cloud. Both set ups are quite similar but I will only focus on the cloud based implementation.
-I use AWS as cloud provider. AWS's EC2 instance is the easiest (and cheapest) to get the database running.
-Make sure you have installed the AWS Command Line Interface from [here](http://aws.amazon.com/cli/) and have setup an own Key-Pair (let's call it "yourkey.pem").
+The project interacts with a server running TimescaleDB there are two ways to bring it up and running, locally or in the cloud. Both setups are quite similar but I will only focus on the cloud-based implementation.
+I use AWS as a cloud provider. AWS's EC2 instance is the easiest (and cheapest) to get the database running.
+Make sure you have installed the AWS Command Line Interface from [here](http://aws.amazon.com/cli/) and have set up an own Key-Pair (let's call it "yourkey.pem").
 
-To just simple follow along I provide a shell [scrip](https://github.com/AionosChina/udacity-dend-capstone-project/blob/main/aws-vm-timescaledb.sh) that will create a temporary EC2, which we can then SSH into. After everything we are done with testing this project, we can then just press [ENTER] and the instance will be terminated. The script provided is a modified version of Michael Wittigs "AWS in Action", which you can find [here](https://github.com/AWSinAction/code2/blob/master/chapter04/virtualmachine.sh).
+To just simply follow along I provide a shell [scrip](https://github.com/AionosChina/udacity-dend-capstone-project/blob/main/aws-vm-timescaledb.sh) that will create a temporary EC2, which we can then SSH into. After everything we are done with testing this project, we can then just press [ENTER] and the instance will be terminated. The script provided is a modified version of Michael Wittigs "AWS in Action", which you can find [here](https://github.com/AWSinAction/code2/blob/master/chapter04/virtualmachine.sh).
 
 1. Creating the EC2 Instance & SSH into the Server
 ```bash
 #use a script for temporary creating an EC2 instance
 chmod +x aws-vm-timescaledb.sh && ./aws-vm-timescaledb.sh
 
-#connect to the ec2 instance with your own key
+#connect to the ec2 instance with your key
 ssh -i "yourkey.pem" yourinstanceadress.compute.amazonaws.com
 
 ```
 2. TimescaleDB Server Setup
-The server needs to configured to accept incoming request other than the localhost.
+The server needs to be configured to accept incoming requests other than the localhost.
 
 ```bash
 #CONFIGURATION FOR DATABASE CONFIG FILES!
@@ -47,7 +47,7 @@ listen_addresses = ‘*’
 host all all 0.0.0.0/0 md5
 
 #3)
-#then restart the db with:
+#then restart the DB with:
 sudo systemctl restart postgresql
 ```
 3. TimescaleDB Login
@@ -62,7 +62,7 @@ CREATE DATABASE dend;
 ```
 
 4. Create the Config File for this Project
-The scripts used in this project will import the data base information from a private .cfg file for security reasons. To follow along please create your own file as follows:
+The scripts used in this project will import the database information from a private .cfg file for security reasons. To follow along please create your file as follows:
 ```bash
 #execute from your local machine (not EC2)
 nano dwh.cfg
