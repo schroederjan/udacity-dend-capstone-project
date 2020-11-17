@@ -1,8 +1,8 @@
 
-#packages
+#PACKAGES
 import pandas as pd
 
-#functions
+#FUNCTIONS
 def prepare_taxi_data():
     
     # TLC Data = taxi_data
