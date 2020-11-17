@@ -19,6 +19,7 @@ payment_types_table_drop = "DROP TABLE IF EXISTS payment_types"
 rates_table_drop = "DROP TABLE IF EXISTS rates"
 weather_table_drop = "DROP TABLE IF EXISTS weather"
 zones_table_drop = "DROP TABLE IF EXISTS zones"
+taxi_hour_table_drop = "DROP TABLE IF EXISTS taxi_hour CASCADE"
 
 # CREATE TABLES
 
@@ -47,6 +48,15 @@ CREATE INDEX ON rides (vendor_id, pickup_datetime desc);
 CREATE INDEX ON rides (pickup_datetime desc, vendor_id);
 CREATE INDEX ON rides (rate_code, pickup_datetime DESC);
 CREATE INDEX ON rides (passenger_count, pickup_datetime desc);
+""")
+
+taxi_hour_table_create = ("""
+CREATE TABLE taxi_hour
+(
+one_hour TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+count_rides NUMERIC
+);
+SELECT create_hypertable('taxi_hour', 'one_hour');
 """)
 
 payment_types_table_create = ("""
@@ -107,13 +117,26 @@ rates_table_insert = (""" INSERT INTO rates(rate_code, description) VALUES
 (6, 'group ride')
 """)
 
+#INSERT TABLE (ANALYTICS)
+
+taxi_hour_insert_table = (""" 
+INSERT INTO taxi_hour
+SELECT time_bucket_gapfill('1 hour', pickup_datetime, '2018-01-01 00:00:00','2018-01-31 23:59:59') AS one_hour, COUNT(*) AS count_rides
+    FROM rides
+    WHERE  pickup_datetime < '2018-02-01' AND pickup_datetime > '2018-01-01'
+    GROUP BY one_hour
+    ORDER BY one_hour
+;
+""")
+
 # QUERY LISTS
 
 drop_extensions_queries = [timescaledb_extension_drop]
 create_extensions_queries = [timescaledb_extension_create]
 
-drop_table_queries = [rides_table_drop, payment_types_table_drop, rates_table_drop, weather_table_drop, zones_table_drop]
-create_table_queries = [rides_table_create, payment_types_table_create, rates_table_create, weather_table_create, zones_table_create]
+drop_table_queries = [rides_table_drop, payment_types_table_drop, rates_table_drop, weather_table_drop, zones_table_drop, taxi_hour_table_drop]
+create_table_queries = [rides_table_create, payment_types_table_create, rates_table_create, weather_table_create, zones_table_create, taxi_hour_table_create]
 
 insert_table_queries = [payment_type_table_insert, rates_table_insert]
+insert_analytics_table_queries = [taxi_hour_insert_table]
 
